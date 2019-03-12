@@ -1,0 +1,29 @@
+1:package chap18;
+2:
+3:import java.io.IOException;
+4:import java.io.InputStream;
+5:/*
+6: * IO스트림 : 데이터이동통로. 단방향이다. 지연(버퍼가 존재) 
+7: * 
+8: *    입력  바이트 : 1byte단위 read()           InputStream
+9: *        문자    : 2byte(1 char)단위 read()   Reader
+10: *    출력 바이트 :  1byte단위 write()          OutputStream > PrintStream
+11: *        문자   : 2byte(1 char)단위 write()   Writer
+12: *        
+13: *    InputStream을 Reader 객체로 변환 : InputStreamReader
+14: *    OutputStream을 Writer 객체로 변환 : OutputStreamWriter    
+15: *    
+16: *   자바가 제공해주는 표준입출력 객체 
+17: *    표준입력객체 : InputStream System.in
+18: *    표준출력객체 : PrintStream System.out
+19: *    표준오류객체 : PrintStream System.err
+20: */
+21:public class InputStreamEx1 {
+22:	public static void main(String[] args) throws IOException {
+23:		InputStream in = System.in;
+24:		int data = 0;
+25:		while((data=in.read()) != -1) { //ctrl+z
+26:			System.out.print((char)data);
+27:		}
+28:	}
+29:}
