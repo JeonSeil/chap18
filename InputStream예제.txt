@@ -1,0 +1,116 @@
+package chap18;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+/*
+ * InputStream 데이터를 읽기 기능
+ * int  read()            : 1byte 를 읽어서 리턴
+ * int  read(byte[] buf)  : buf의 길이만큼 데이터를 읽어서 데이터는 buf 저장. 읽은 바이트수를 리턴 
+ * int  read(byte[] buf,int start,int len)  : 
+ *                     buf의 start인덱스 부터 len만큼 데이터를 읽어서 데이터는 buf 저장. 읽은 바이트수를 리턴 
+ */
+public class FileInputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+		FileInputStream fis = new FileInputStream("src/chap18/InputStreamEx1.java");
+//		int data = 0;
+//		while((data = fis.read()) != -1) {
+//			System.out.print((char)data);
+//		}
+		//fis.available() : 읽기 가능 바이트 리턴
+		int len = 0;
+		byte[] buf = new byte[fis.available()];
+//		while((len=fis.read(buf)) != -1) {
+//			System.out.print(new String(buf,0,len));
+//		}
+		while((len=fis.read(buf,0,buf.length)) != -1) {
+		    System.out.print(new String(buf,0,len));
+	    }
+	}
+}
+package chap18;
+
+import java.io.IOException;
+import java.io.InputStream;
+/*
+ * IO스트림 : 데이터이동통로. 단방향이다. 지연(버퍼가 존재) 
+ * 
+ *    입력  바이트 : 1byte단위 read()           InputStream
+ *        문자    : 2byte(1 char)단위 read()   Reader
+ *    출력 바이트 :  1byte단위 write()          OutputStream > PrintStream
+ *        문자   : 2byte(1 char)단위 write()   Writer
+ *        
+ *    InputStream을 Reader 객체로 변환 : InputStreamReader
+ *    OutputStream을 Writer 객체로 변환 : OutputStreamWriter    
+ *    
+ *   자바가 제공해주는 표준입출력 객체 
+ *    표준입력객체 : InputStream System.in
+ *    표준출력객체 : PrintStream System.out
+ *    표준오류객체 : PrintStream System.err
+ */
+public class InputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+		InputStream in = System.in;
+		int data = 0;
+		while((data=in.read()) != -1) { //ctrl+z
+			System.out.print((char)data);
+		}
+	}
+}
+package chap18;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.SequenceInputStream;
+
+/*
+ * SequenceInputStream 예제
+ *   여러개의 InputStream을 모아서 하나의 InputStream으로 리턴. 
+ *   연결스트림.
+ */
+public class SequenceInputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+		byte[] arr1 = {1,2,3,4,5};
+		byte[] arr2 = {6,7,8,9,10};
+		ByteArrayInputStream stream1 = new ByteArrayInputStream(arr1);
+		ByteArrayInputStream stream2 = new ByteArrayInputStream(arr2);
+		SequenceInputStream in = new SequenceInputStream(stream1,stream2);
+		int data;
+//		System.out.println("stream1의 내용");
+//		while((data = stream1.read()) != -1) {
+//			System.out.println((byte)data);
+//		}
+//		System.out.println("stream2의 내용");
+//		while((data = stream2.read()) != -1) {
+//			System.out.println((byte)data);
+//		}
+		System.out.println("연결 스트림 in 의 내용");
+		while((data = in.read()) != -1) {
+			System.out.println((byte)data);
+		}
+	}
+}
+package chap18;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Vector;
+
+public class SequenceInputStreamEx2 {
+	public static void main(String[] args) throws IOException {
+		FileInputStream f1 = new FileInputStream("src/chap18/InputStreamEx1.java");
+		FileInputStream f2 = new FileInputStream("src/chap18/ReaderEx1.java");
+		FileInputStream f3 = new FileInputStream("err.log");
+		int len = 0;
+		byte[] buf = new byte[1024];
+		Vector<InputStream> v = new Vector<InputStream>();
+		v.add(f1);v.add(f2);v.add(f3);
+		SequenceInputStream st = new SequenceInputStream(v.elements());
+		while((len=st.read(buf)) != -1) {
+			System.out.print(new String(buf,0,len));
+		}
+	}
+}

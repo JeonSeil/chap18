@@ -1,0 +1,2 @@
+BufferedReader 연습문제
+buffered.txt 파일에 저장됨
